@@ -1,9 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
-
-// Scraping tools
-const axios = require('axios')
-const cheerio = require('cheerio')
+const logger = require('morgan')
 
 // Loads all models
 const db = require('./models')
@@ -13,6 +10,7 @@ const PORT = 3000
 const app = express()
 
 // Middleware
+app.use(logger('dev'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static('public'))
