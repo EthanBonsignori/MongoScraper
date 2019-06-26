@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css?family=Forum&display=swap');
+
+body {
+  background: #252526;
+}
+
+.landing {
+  position: relative;
+  left: 50%;
+  width: 80vw;
+  height: 70vh;
+  transform: translate(-50%);
+  display: inline-block;
+}
+.landing:before {
+  content: '';
+  background-color: #000;
+  opacity: 0.6;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.landing img {
+  width: 80vw;
+  height: 70vh;
+  display: block;
+}
+
+.landing-title {
+  font-family: 'Forum', cursive;
+  font-size: 5rem;
+  color: #fff;
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%);
+  z-index: 2;
+}
+.landing-title::after {
+  font-size: 2.5rem;
+  color: rgb(199, 199, 199);
+  white-space: pre;
+  content: '\A Scrape articles from the New York Times'
+}
+
+
+.landing-bg {
+  height: 100%;
+}
+
+.card-content {
+  padding: 0px 12px !important;
+}
+
+.article-title {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.card-action {
+  border: none !important;
+  padding: 0px 12px !important;
+}
+
+.favorite-icon {
+  margin-top: 6px;
+  margin-right: -8px;
+  font-size: 1.5rem;
+  float: right;
+  color: #000;
+  opacity: 0.3;
+}
+
+.favorite-icon:hover {
+  color: yellow;
+  opacity: 1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #575555;
+}

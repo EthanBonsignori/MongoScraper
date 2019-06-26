@@ -4,20 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="./images/favicon.png" />
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <link rel="stylesheet" href="./style.css" />
+
   <title>Mongo Scraper</title>
 </head>
 <body>
-  <h1>Mongo Scraper</h1>
-  <button id="scrape-ny"><a href="/scrape">Scrape NYTimes</a></button>
-  <section id="articles">
-    <div class="articles-header">
-      <h2>Articles</h2>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="/" class="brand-logo center">Mongo Scraper</a>
+      <ul id="nav-mobile" class="left hide-on-med-and-down">
+        <li><a href="/">Home</a></li>
+        <li><a href="">Saved Articles</a></li>
+      </ul>
     </div>
-    <div class="article-display">
-      <!-- Articles append here -->
+  </nav>
+  <section>
+    <div class="landing">
+      <img class="landing-bg" src="./images/landing-bg.jpg" />
+      <h1 class="landing-title center-align">Mongo Scraper</h1>
     </div>
   </section>
+  <div class="container">
+    <section>
+      <div>
+        <h2 class="center-align" style="color: #fff">Articles</h2>
+      </div>
+      <div id="article-display">
+        <!-- Articles append here -->
+        <a class="waves-efect waves-light btn" id="scrape-ny">Get Articles</a>
+      </div>
+    </section>
+  </div>
 </body>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="./app.js"></script>
 </html>

@@ -2,9 +2,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const logger = require('morgan')
 
-// Loads all models
-const db = require('./models')
-
 const PORT = 3000
 
 const app = express()
