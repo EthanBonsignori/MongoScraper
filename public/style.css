@@ -52,7 +52,6 @@ body {
   content: '\A Scrape articles from The New York Times'
 }
 
-
 .landing-bg {
   height: 100%;
 }
@@ -64,6 +63,10 @@ body {
   background-color: rgb(255, 187, 0);
   color: #fff;
   text-align: center;
+}
+
+.modal {
+  transform: translateY(-50%) scaleX(1) !important;
 }
 
 .card-content {

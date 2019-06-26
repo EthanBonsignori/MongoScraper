@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add a loading bar if waiting on articles
     if (toggle) {
       articleDisplay.innerHTML = `
-      <div class="progress red lighten-4" style="width: 20%; margin: 0 auto;">
+      <div class="progress red lighten-4" style="width: 20%; margin: 3rem auto;">
         <div class="indeterminate red"></div>
       </div>`
     }
@@ -133,8 +133,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize modals
   const initModals = () => {
+    const options = {
+      endingTop: '50%'
+    }
     const elems = document.querySelectorAll('.modal')
-    window.M.Modal.init(elems, null)
+    window.M.Modal.init(elems, options)
   }
   initModals()
 })
