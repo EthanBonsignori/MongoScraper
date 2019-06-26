@@ -53,8 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (article.author.endsWith(' and ')) {
       article.author = article.author.slice(0, -5)
     }
-    // Adds 'By' to the front of author
-    article.author = `By ${article.author}`
+    // Replace 'AND' with '&'
+    article.author = article.author.toUpperCase()
+    article.author = article.author.replace(' AND ', ' & ')
   }
 
   // Creates Card HTML for each article
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="card-action">
             <a href="${article.link}" target="_blank">View on nytimes.com</a>
-            <span style="color: grey; float: right;">${article.author}</span>
+            <span style="color: grey; float: right;">By ${article.author}</span>
           </div>
         </div>
       </div>

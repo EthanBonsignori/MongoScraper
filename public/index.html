@@ -13,23 +13,30 @@
   <title>Mongo Scraper</title>
 </head>
 <body>
-  <nav>
-    <div class="nav-wrapper">
-      <a href="/" class="brand-logo center">Mongo Scraper</a>
-      <ul id="nav-mobile" class="left hide-on-med-and-down">
-        <li><a href="/">Home</a></li>
-        <li><a href="">Saved Articles</a></li>
-      </ul>
-    </div>
-  </nav>
+
+  <!-- Navbar -->
+  <div class="navbar-fixed">
+    <nav>
+      <div class="nav-wrapper">
+        <a href="/" class="brand-logo center">Mongo Scraper</a>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+          <li><a href="/">Home</a></li>
+          <li><a href="">Saved Articles</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
   <section>
     <div class="landing">
       <img class="landing-bg" src="./images/landing-bg.jpg" />
       <h1 class="landing-title center-align">Mongo Scraper</h1>
     </div>
   </section>
-  <div class="container">
-    <section>
+
+  
+  <section>
+    <div class="container">
       <div>
         <h2 class="center-align" style="color: #fff">Articles</h2>
       </div>
@@ -42,24 +49,23 @@
           <a class="waves-efect waves-light btn red" id="scrape-ny">Get Articles</a>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 
-  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
 
+  <!-- Modal to display quantity of articles scraped -->
   <div id="quantity-modal" class="modal">
     <div class="modal-content">
-      <!-- <div class="valign-wrapper"> -->
-        <div class="center-align">
-          <h4>Scraped 
-            <span id="article-quant">x</span>
-             articles from New York Times.
-          </h4>
-        </div>
-      <!-- </div> -->
+      <div class="center-align">
+        <h4>
+          Scraped 
+          <span id="article-quant" class="red-text">x</span>
+          articles from New York Times.
+        </h4>
+      </div>
     </div>
     <div class="modal-footer">
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cool</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat red-text">Cool</a>
     </div>
   </div>
 

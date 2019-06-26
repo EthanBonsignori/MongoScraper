@@ -88,7 +88,7 @@ body {
 }
 
 .favorite-icon:hover {
-  color: yellow;
+  color: rgb(255, 187, 0);
   opacity: 1;
 }
 
