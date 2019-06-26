@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log(body)
     displayLoader(false)
+    openModal(body.length)
     displayArticles(body)
   }
 
@@ -61,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let cardHTML = `
       <div class="col s12 m6 l6">
         <div class="card horizontal">`
-    // Add image only if one exists
+    // Only add image to article card if one exists
     if (article.imageSrc) {
       cardHTML += `
         <div class="card-image">
@@ -93,6 +94,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const elems = document.querySelectorAll('.tooltipped')
     window.M.Tooltip.init(elems, options)
+  }
+
+  const initModals = () => {
+    const elems = document.querySelectorAll('.modal')
+    window.M.Modal.init(elems, null)
+  }
+  initModals()
+
+  const openModal = (quantity) => {
+    const elem = document.getElementById('quantity-modal')
+    const instance = window.M.Modal.getInstance(elem)
+    document.getElementById('article-quant').innerHTML = quantity
+    instance.open()
   }
 
   document.getElementById('scrape-ny').addEventListener('click', () => {

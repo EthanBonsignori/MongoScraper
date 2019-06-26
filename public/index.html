@@ -35,11 +35,37 @@
       </div>
       <div id="article-display">
         <!-- Articles append here -->
-        <a class="waves-efect waves-light btn" id="scrape-ny">Get Articles</a>
+        <div class="no-articles">
+          <span>No articles found...</span>
+        </div>
+        <div class="center-align" style="margin-top: 1rem;">
+          <a class="waves-efect waves-light btn red" id="scrape-ny">Get Articles</a>
+        </div>
       </div>
     </section>
   </div>
+
+  <a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+
+  <div id="quantity-modal" class="modal">
+    <div class="modal-content">
+      <!-- <div class="valign-wrapper"> -->
+        <div class="center-align">
+          <h4>Scraped 
+            <span id="article-quant">x</span>
+             articles from New York Times.
+          </h4>
+        </div>
+      <!-- </div> -->
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cool</a>
+    </div>
+  </div>
+
 </body>
+
+
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="./app.js"></script>
