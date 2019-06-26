@@ -15,19 +15,22 @@ module.exports = (app) => {
   // })
 
   app.post('/articles', async (req, res) => {
-    getWorldArticles()
-    res.status(201)
+    const articleCount = await getWorldArticles()
+    res.json(articleCount).status(201)
   })
 
   app.get('/articles', async (req, res) => {
     const dbArticle = await db.Article.find({})
-    res.json(dbArticle)
+    res.json(dbArticle).status(201)
   })
 
   const getWorldArticles = async () => {
     const axiosRes = await axios.get('https://www.nytimes.com/section/world')
     const $ = cheerio.load(axiosRes.data)
-
+    console.log('=================================================')
+    console.log(axiosRes.data.length)
+    console.log('=================================================')
+    let articleCount = 0
     $('section #stream-panel div ol li div').each(function () {
       // Only create an obj if cheerio finds some text
       if ($(this).find('h2').text()) {
@@ -42,9 +45,13 @@ module.exports = (app) => {
 
         // Push articles to db
         db.Article.create(articleObj).catch(err => {
-          console.error(err)
+          err = 'duplicate item'
+          console.log(err)
         })
+        console.log(articleCount)
+        articleCount++
       }
     })
+    return articleCount
   }
 }

@@ -22,6 +22,10 @@ const ArticleSchema = new Schema({
   imageSrc: {
     type: String
   },
+  saved: {
+    type: Boolean,
+    default: false
+  },
   comment: {
     type: Schema.Types.ObjectId,
     ref: 'Comment'

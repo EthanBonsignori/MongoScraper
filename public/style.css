@@ -2,6 +2,8 @@
 
 body {
   background: #252526;
+  display: flex;
+  flex-direction: column;
 }
 
 .landing {
@@ -47,7 +49,7 @@ body {
   font-size: 2.5rem;
   color: rgb(199, 199, 199);
   white-space: pre;
-  content: '\A Scrape articles from the New York Times'
+  content: '\A Scrape articles from The New York Times'
 }
 
 
