@@ -17,9 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add a loading bar if waiting on articles
     if (toggle && !inComments) {
       articleDisplay.innerHTML = `
-      <div class="progress red lighten-4" style="width: 20%; margin: 3rem auto;">
-        <div class="indeterminate red"></div>
-      </div>`
+        <div class="progress red lighten-4" style="width: 20%; margin: 3rem auto;">
+          <div class="indeterminate red"></div>
+        </div>`
     }
     if (toggle && inComments) {
       comments.innerHTML = `
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     const body = await fetchRes.json()
     // If articles are returned, display them
-    if (body.length > 1) {
+    if (body.length > 0) {
       displayLoader(false, false)
       displayArticles(body)
     // If no articles, allow users to scrape new articles.
@@ -75,18 +75,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // GET all saved articles
   const getSavedArticles = async () => {
-    const fetchRes = await window.fetch('/articles/saved')
+    const fetchRes = await window.fetch('/articles?saved=true')
     const body = await fetchRes.json()
     if (body.length > 0) {
       displayArticles(body, onSavedPage)
     } else {
       articleDisplay.innerHTML = `
-      <div class="no-articles">
-        <span>No saved articles found. Try saving an article first...</span>
-      </div>
-      <div class="center-align" style="margin: 1rem;">
-        <a href="/" id="home-button-saved" class="waves-efect waves-light btn red">Home</a>
-      </div>`
+        <div class="no-articles">
+          <span>No saved articles found. Try saving an article first...</span>
+        </div>
+        <div class="center-align" style="margin: 1rem;">
+          <a href="/" id="home-button-saved" class="waves-efect waves-light btn red">Home</a>
+        </div>`
       document.getElementById('home-button-saved').addEventListener('click', () => {
         onSavedPage = false
       })
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
       elem.addEventListener('click', function (e) {
         const articleId = this.getAttribute('data-id')
         closeTooltip(this)
-        saveArticle(articleId)
+        setSaveArticle(articleId, true)
       })
     })
   }
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
       elem.addEventListener('click', function (e) {
         const articleId = this.getAttribute('data-id')
         closeTooltip(this)
-        unsaveArticle(articleId)
+        setSaveArticle(articleId, false)
       })
     })
   }
@@ -214,23 +214,22 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   }
 
-  // Save an article
-  const saveArticle = async (id) => {
-    const fetchRes = await window.fetch(`/articles/save/${id}`, { method: 'POST' })
-    const body = await fetchRes.json()
-    displayArticles(body)
-  }
-
-  // Unsave an article
-  const unsaveArticle = async (id) => {
-    const fetchRes = await window.fetch(`/articles/unsave/${id}`, { method: 'POST' })
+  // Set the saved status an article
+  const setSaveArticle = async (id, saved) => {
+    const fetchRes = await window.fetch(`/articles/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ saved })
+    })
     const body = await fetchRes.json()
     displayArticles(body)
   }
 
   // Get comments from DB for one article
   const getComments = async (id) => {
-    const fetchRes = await window.fetch(`/articles/comment/${id}`, { method: 'GET' })
+    const fetchRes = await window.fetch(`/articles/${id}`, { method: 'GET' })
     const body = await fetchRes.json()
     displayLoader(true, true)
     await setupCommentModal(body)
@@ -245,12 +244,12 @@ document.addEventListener('DOMContentLoaded', () => {
       body.map(comment => {
         comments.innerHTML = ''
         const commentHTML = `
-        <div class="col s12 comment">
-          <p style="display:inline;">${comment.body}</p>
-          <a class="btn red delete-comment" style="float:right;">
-            <i class="fas fa-trash-alt"></i>
-          </a>
-        </div>`
+          <div class="col s12 comment">
+            <p style="display:inline;">${comment.body}</p>
+            <a class="btn red delete-comment" style="float:right;">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </div>`
         comments.innerHTML += commentHTML
       })
     // If no comments, display no comments notification
@@ -321,15 +320,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('save-comment').addEventListener('click', async () => {
     const comment = document.getElementById('comment-textarea').value
     const id = document.getElementById('article-id').innerHTML
-    const fetchRes = await window.fetch(`/articles/comment/${id}`, {
+    const fetchRes = await window.fetch(`/articles/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ comment: comment })
+      body: JSON.stringify({ comment })
     })
     const body = await fetchRes.json()
-
+    console.log(body)
     // document.getElementById('comments').innerHTML += `
     //   <div class="col s12 comment">
     //     <p style="display:inline;">${comment.value}</p>

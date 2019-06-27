@@ -5,47 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="shortcut icon" href="./images/favicon.png" />
-
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
   <link rel="stylesheet" href="./style.css" />
-
   <title>Mongo Scraper</title>
 </head>
 <body>
-
-  <!-- Navbar -->
-  <div class="navbar-fixed">
-    <nav>
-      <div class="nav-wrapper">
-        <a href="/" class="brand-logo center">Mongo Scraper</a>
-        <ul id="nav-mobile" class="left hide-on-med-and-down">
-            <li><a id="home-button" href="/">Home</a></li>
-            <li><a id="saved-articles">Saved Articles</a></li>
-          </ul>
-      </div>
-    </nav>
-  </div>
-
-  <section>
-    <div class="landing">
-      <img class="landing-bg" src="./images/landing-bg.jpg" />
-      <h1 class="landing-title center-align">Mongo Scraper</h1>
+  <header>
+    <!-- Navbar -->
+    <div class="navbar-fixed">
+      <nav>
+        <div class="nav-wrapper">
+          <a href="/" class="brand-logo center">Mongo Scraper</a>
+          <ul id="nav-mobile" class="left hide-on-med-and-down">
+              <li><a id="home-button" href="/">Home</a></li>
+              <li><a id="saved-articles">Saved Articles</a></li>
+            </ul>
+        </div>
+      </nav>
     </div>
-  </section>
+  </header>
 
-  
-  <section>
-    <div class="container">
-      <div>
-        <h2 class="center-align" style="color: #fff">Articles</h2>
+  <main>
+    <!-- Landing Image -->
+    <section>
+      <div class="landing">
+        <img class="landing-bg" src="./images/landing-bg.jpg" />
+        <h1 class="landing-title center-align">Mongo Scraper</h1>
       </div>
-      <div id="article-display">
-        <!-- Articles append here -->
+    </section>
+    <!-- Articles section -->
+    <section>
+      <div class="container">
+        <div>
+          <h2 class="center-align" style="color: #fff">Articles</h2>
+        </div>
+        <div id="article-display">
+          <!-- Articles append here -->
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
+  <!-- Footer -->
   <footer class="page-footer" style="margin-top: 2rem;">
     <div class="container">
       <div class="row">
@@ -105,9 +107,7 @@
       <a href="#!" class="modal-close waves-effect waves-green btn-flat red-text">Close</a>
     </div>
   </div>
-
 </body>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="./app.js"></script>
 </html>
