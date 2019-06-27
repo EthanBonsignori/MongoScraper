@@ -16,6 +16,12 @@ module.exports = (app) => {
     res.json(dbArticle).status(201)
   })
 
+  // GET saved articles from DB
+  app.get('/articles/saved', async (req, res) => {
+    const savedDbArticles = await db.Article.find({ saved: true })
+    res.json(savedDbArticles).status(201)
+  })
+
   // POST articles to DB from scraper
   app.post('/articles', async (req, res) => {
     const articleCount = await getWorldArticles()

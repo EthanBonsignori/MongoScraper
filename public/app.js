@@ -232,6 +232,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   initModals()
 
+  document.getElementById('saved-articles').addEventListener('click', async () => {
+    const fetchRes = await window.fetch('/articles/saved')
+    const body = await fetchRes.json()
+    if (body.length > 0) {
+      displayArticles(body)
+    } else {
+      articleDisplay.innerHTML = `
+      <div class="no-articles">
+        <span>No saved articles found. Try saving an article first...</span>
+      </div>
+      <div class="center-align" style="margin: 1rem;">
+        <a href="/" class="waves-efect waves-light btn red">Home</a>
+      </div>`
+    }
+  })
+
   document.getElementById('save-comment').addEventListener('click', () => {
     const comment = document.getElementById('comment-textarea')
     document.getElementById('comments').innerHTML += `
@@ -242,6 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </a>
       </div>
     `
+    document.getElementsByClassName('delete-comment').addEventListener('click', function () {
+
+    })
     comment.value = ''
   })
 })
