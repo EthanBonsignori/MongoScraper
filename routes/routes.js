@@ -44,10 +44,18 @@ module.exports = (app) => {
     res.json(dbArticles).status(201)
   })
 
-  app.post('/articles/comments/:id', async (req, res) => {
-    const dbComment = await db.Comment.create(req.body)
+  app.get('/articles/comment/:id', async (req, res) => {
     const id = req.params.id
-    const dbArticle = await db.Article.findOneAndUpdate({ _id: id }, { note: dbComment._id }, { new: true })
+    const dbArticle = await db.Article.findOne({ _id: id }).populate('comment')
+    res.json(dbArticle).status(201)
+  })
+
+  app.post('/articles/comment/:id', async (req, res) => {
+    console.log(req.body.comment)
+    const comment = req.body.comment
+    const dbComment = await db.Comment.create({ body: comment })
+    const id = req.params.id
+    const dbArticle = await db.Article.findOneAndUpdate({ _id: id }, { comment: dbComment._id }, { new: true })
     res.json(dbArticle).status(201)
   })
 
