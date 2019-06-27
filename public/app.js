@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       method: 'POST'
     })
     const count = await fetchRes.json()
-    openModal(count / 2)
+    openQuantModal(count / 2)
   }
 
   // Get articles from the DB
@@ -55,14 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   getArticlesFromDb()
-
-  // Open modal with # of articles
-  const openModal = (quantity) => {
-    const elem = document.getElementById('quantity-modal')
-    const instance = window.M.Modal.getInstance(elem)
-    document.getElementById('article-quant').innerHTML = quantity
-    instance.open()
-  }
 
   // Loop articles and display them
   const displayArticles = (articles) => {
@@ -167,22 +159,37 @@ document.addEventListener('DOMContentLoaded', () => {
     Array.from(elems).forEach(function (elem) {
       elem.addEventListener('click', function (e) {
         const articleId = this.getAttribute('data-id')
+        console.log('got click')
         closeTooltip(this)
-        viewComments(articleId)
+        getComments(articleId)
       })
     })
   }
 
+  // Save an article
   const saveArticle = async (id) => {
-    const fetchRes = await window.fetch(`/articles/save/${id}`)
+    const fetchRes = await window.fetch(`/articles/save/${id}`, { method: 'POST' })
     const body = await fetchRes.json()
     displayArticles(body)
   }
 
+  // Unsave an article
   const unsaveArticle = async (id) => {
-    const fetchRes = await window.fetch(`/articles/unsave/${id}`)
+    const fetchRes = await window.fetch(`/articles/unsave/${id}`, { method: 'POST' })
     const body = await fetchRes.json()
     displayArticles(body)
+  }
+
+  // Get comments from DB
+  const getComments = async (id) => {
+    const fetchRes = await window.fetch(`/articles/comments/${id}`)
+    const body = await fetchRes.json()
+    await setupCommentModal(body)
+    openCommentModal(body)
+  }
+
+  const setupCommentModal = (body) => {
+    document.getElementById('article-id').innerHTML = body._id
   }
 
   // Initialize tooltips on article render
@@ -192,6 +199,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const elems = document.querySelectorAll('.tooltipped')
     window.M.Tooltip.init(elems, options)
+  }
+
+  // Open modal with article comments
+  const openCommentModal = (comments) => {
+    const elem = document.getElementById('comment-modal')
+    const instance = window.M.Modal.getInstance(elem)
+    instance.open()
+  }
+
+  // Open modal that displays # of articles scraped
+  const openQuantModal = (quantity) => {
+    const elem = document.getElementById('quantity-modal')
+    const instance = window.M.Modal.getInstance(elem)
+    document.getElementById('article-quant').innerHTML = quantity
+    instance.open()
   }
 
   // Prevent tooltips from staying on page on HTML render by closing them
@@ -209,4 +231,17 @@ document.addEventListener('DOMContentLoaded', () => {
     window.M.Modal.init(elems, options)
   }
   initModals()
+
+  document.getElementById('save-comment').addEventListener('click', () => {
+    const comment = document.getElementById('comment-textarea')
+    document.getElementById('comments').innerHTML += `
+      <div class="col s12 comment">
+        <p style="display:inline;">${comment.value}</p>
+        <a class="btn red delete-comment" style="float:right;">
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </div>
+    `
+    comment.value = ''
+  })
 })

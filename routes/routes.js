@@ -10,34 +10,46 @@ module.exports = (app) => {
     res.render('index')
   })
 
+  // GET articles from DB
+  app.get('/articles', async (req, res) => {
+    const dbArticle = await getArticlesFromDb()
+    res.json(dbArticle).status(201)
+  })
+
+  // POST articles to DB from scraper
   app.post('/articles', async (req, res) => {
     const articleCount = await getWorldArticles()
     res.json(articleCount).status(201)
   })
 
-  app.get('/articles', async (req, res) => {
-    const dbArticle = await db.Article.find({})
+  // POST one article to DB, return all articles to re-render
+  app.post('/articles/save/:id', async (req, res) => {
+    const id = req.params.id
+    await db.Article.findByIdAndUpdate(id, { saved: true })
+    const dbArticles = await getArticlesFromDb()
+    res.json(dbArticles).status(201)
+  })
+
+  // POST one article to DB, return all articles to re-render
+  app.post('/articles/unsave/:id', async (req, res) => {
+    const id = req.params.id
+    await db.Article.findByIdAndUpdate(id, { saved: false })
+    const dbArticles = await getArticlesFromDb()
+    res.json(dbArticles).status(201)
+  })
+
+  app.get('/articles/comments/:id', async (req, res) => {
+    const id = req.params.id
+    const dbArticle = await db.Article.findById(id)
     res.json(dbArticle).status(201)
   })
 
-  app.get('/articles/save/:id', async (req, res) => {
-    const id = req.params.id
-    await db.Article.findByIdAndUpdate(id, { saved: true })
-    const articles = await getArticlesFromDb()
-    res.json(articles).status(201)
-  })
-
-  app.get('/articles/unsave/:id', async (req, res) => {
-    const id = req.params.id
-    await db.Article.findByIdAndUpdate(id, { saved: false })
-    const articles = await getArticlesFromDb()
-    res.json(articles).status(201)
-  })
-
+  // Return all articles from DB
   const getArticlesFromDb = () => {
     return db.Article.find({})
   }
 
+  // Scrape articles from NYTimes
   const getWorldArticles = async () => {
     const axiosRes = await axios.get('https://www.nytimes.com/section/world')
     const $ = cheerio.load(axiosRes.data)

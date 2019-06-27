@@ -123,6 +123,10 @@ div.card-action {
     color: rgb(236, 67, 72)
   }
 
+.comment {
+  padding: 16px;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar-track {
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);

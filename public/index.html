@@ -73,6 +73,40 @@
     </div>
   </div>
 
+  <!-- Comments Modal -->
+  <div id="comment-modal" class="modal">
+    <div class="modal-content" style="padding: 12px;">
+      <div class="center-align">
+        <h5 style="margin: 0;">Article Comments</h5>
+        <span id="article-id-pre" style="color:lightgray;">
+          id:<span id="article-id">0000000000000000000000000</span>
+        </span>
+        <div class="col s12" id="comments">
+          <div style="background-color:rgb(255, 187, 0); padding: 4px; border-radius: 3px;">
+            <span style="color: #fff;">
+              <i class="fas fa-exclamation-triangle"></i>
+              No comments found for this article. Try adding one below.
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          <form class="col s12">
+            <div class="row">
+              <div class="input-field col s12">
+                <textarea id="comment-textarea" class="materialize-textarea"></textarea>
+                <label for="comment-textarea">Add Comment</label>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" id="save-comment" class="btn green">Save Comment</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat red-text">Close</a>
+    </div>
+  </div>
+
 </body>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
