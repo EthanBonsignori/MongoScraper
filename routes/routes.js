@@ -18,7 +18,7 @@ module.exports = (app) => {
 
   // GET saved articles from DB
   app.get('/articles/saved', async (req, res) => {
-    const savedDbArticles = await db.Article.find({ saved: true })
+    const savedDbArticles = await db.Article.find({ saved: true }).populate('comment')
     res.json(savedDbArticles).status(201)
   })
 
@@ -44,9 +44,10 @@ module.exports = (app) => {
     res.json(dbArticles).status(201)
   })
 
-  app.get('/articles/comments/:id', async (req, res) => {
+  app.post('/articles/comments/:id', async (req, res) => {
+    const dbComment = await db.Comment.create(req.body)
     const id = req.params.id
-    const dbArticle = await db.Article.findById(id)
+    const dbArticle = await db.Article.findOneAndUpdate({ _id: id }, { note: dbComment._id }, { new: true })
     res.json(dbArticle).status(201)
   })
 

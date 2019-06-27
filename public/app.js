@@ -56,7 +56,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   getArticlesFromDb()
 
-  // Loop articles and display them
+  const getSavedArticles = async () => {
+    const fetchRes = await window.fetch('/articles/saved')
+    const body = await fetchRes.json()
+    if (body.length > 0) {
+      displayArticles(body)
+    } else {
+      articleDisplay.innerHTML = `
+      <div class="no-articles">
+        <span>No saved articles found. Try saving an article first...</span>
+      </div>
+      <div class="center-align" style="margin: 1rem;">
+        <a href="/" class="waves-efect waves-light btn red">Home</a>
+      </div>`
+    }
+  }
+
+  // Map articles and display them
   const displayArticles = (articles) => {
     let newHtml = ''
     displayLoader(true)
@@ -159,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
     Array.from(elems).forEach(function (elem) {
       elem.addEventListener('click', function (e) {
         const articleId = this.getAttribute('data-id')
-        console.log('got click')
         closeTooltip(this)
         getComments(articleId)
       })
@@ -182,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Get comments from DB
   const getComments = async (id) => {
-    const fetchRes = await window.fetch(`/articles/comments/${id}`)
+    const fetchRes = await window.fetch(`/articles/comments/${id}`, { method: 'POST' })
     const body = await fetchRes.json()
     await setupCommentModal(body)
     openCommentModal(body)
@@ -190,6 +205,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const setupCommentModal = (body) => {
     document.getElementById('article-id').innerHTML = body._id
+    const comments = document.getElementById('comments')
+    if (body.length > 0) {
+      body.map(comment => {
+        console.log(comment)
+        const commentHTML = `
+        <div class="col s12 comment">
+          <p style="display:inline;">${comment.body}</p>
+          <a class="btn red delete-comment" style="float:right;">
+            <i class="fas fa-trash-alt"></i>
+          </a>
+        </div>`
+        comments.innerHTML += commentHTML
+      })
+    }
   }
 
   // Initialize tooltips on article render
@@ -232,23 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   initModals()
 
-  document.getElementById('saved-articles').addEventListener('click', async () => {
-    const fetchRes = await window.fetch('/articles/saved')
-    const body = await fetchRes.json()
-    if (body.length > 0) {
-      displayArticles(body)
-    } else {
-      articleDisplay.innerHTML = `
-      <div class="no-articles">
-        <span>No saved articles found. Try saving an article first...</span>
-      </div>
-      <div class="center-align" style="margin: 1rem;">
-        <a href="/" class="waves-efect waves-light btn red">Home</a>
-      </div>`
-    }
+  document.getElementById('saved-articles').addEventListener('click', () => {
+    getSavedArticles()
   })
 
-  document.getElementById('save-comment').addEventListener('click', () => {
+  document.getElementById('save-comment').addEventListener('click', async () => {
     const comment = document.getElementById('comment-textarea')
     document.getElementById('comments').innerHTML += `
       <div class="col s12 comment">
@@ -258,9 +275,9 @@ document.addEventListener('DOMContentLoaded', () => {
         </a>
       </div>
     `
-    document.getElementsByClassName('delete-comment').addEventListener('click', function () {
+    // document.getElementsByClassName('delete-comment').addEventListener('click', function () {
 
-    })
+    // })
     comment.value = ''
   })
 })
