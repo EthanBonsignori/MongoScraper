@@ -66,13 +66,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Loop articles and display them
   const displayArticles = (articles) => {
-    for (let i = 0; i < articles.length; i++) {
-      const article = articles[i]
+    let newHtml = ''
+    displayLoader(true)
+    articles.map(article => {
       fixStrings(article)
       const cardHTML = createArticleCard(article)
-      articleDisplay.innerHTML += cardHTML
-      initTooltips()
-    }
+      newHtml += cardHTML
+    })
+    displayLoader(false)
+    articleDisplay.innerHTML = newHtml
+    initTooltips()
+    initSaveButtons()
+    initUnsaveButtons()
+    initCommentButtons()
   }
 
   // Helper to fix strings
@@ -105,10 +111,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     cardHTML += `
           <div class="card-stacked">
-            <div class="card-content">
-              <a class="tooltipped favorite-icon" data-tooltip="Save Article">
-                <i class="fas fa-star"></i>
+            <div class="card-content">`
+    if (article.saved) {
+      cardHTML += `
+              <a class="tooltipped comment-icon" data-id="${article._id}" data-tooltip="View Comments">
+                <i class="fas fa-comment"></i>
               </a>
+              <a class="tooltipped unfavorite-icon" data-id="${article._id}" data-tooltip="Unsave Article">
+                <i class="fas fa-star"></i>
+              </a>`
+    } else {
+      cardHTML += `
+              <a class="tooltipped favorite-icon" data-id="${article._id}" data-tooltip="Save Article">
+                <i class="fas fa-star"></i>
+              </a>`
+    }
+    cardHTML += `
               <p class="article-title">${article.title}</p>
               <p>${article.body}</p>
             </div>
@@ -122,6 +140,51 @@ document.addEventListener('DOMContentLoaded', () => {
     return cardHTML
   }
 
+  const initSaveButtons = () => {
+    const elems = document.getElementsByClassName('favorite-icon')
+    Array.from(elems).forEach(function (elem) {
+      elem.addEventListener('click', function (e) {
+        const articleId = this.getAttribute('data-id')
+        closeTooltip(this)
+        saveArticle(articleId)
+      })
+    })
+  }
+
+  const initUnsaveButtons = () => {
+    const elems = document.getElementsByClassName('unfavorite-icon')
+    Array.from(elems).forEach(function (elem) {
+      elem.addEventListener('click', function (e) {
+        const articleId = this.getAttribute('data-id')
+        closeTooltip(this)
+        unsaveArticle(articleId)
+      })
+    })
+  }
+
+  const initCommentButtons = () => {
+    const elems = document.getElementsByClassName('comment-icon')
+    Array.from(elems).forEach(function (elem) {
+      elem.addEventListener('click', function (e) {
+        const articleId = this.getAttribute('data-id')
+        closeTooltip(this)
+        viewComments(articleId)
+      })
+    })
+  }
+
+  const saveArticle = async (id) => {
+    const fetchRes = await window.fetch(`/articles/save/${id}`)
+    const body = await fetchRes.json()
+    displayArticles(body)
+  }
+
+  const unsaveArticle = async (id) => {
+    const fetchRes = await window.fetch(`/articles/unsave/${id}`)
+    const body = await fetchRes.json()
+    displayArticles(body)
+  }
+
   // Initialize tooltips on article render
   const initTooltips = () => {
     const options = {
@@ -129,6 +192,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     const elems = document.querySelectorAll('.tooltipped')
     window.M.Tooltip.init(elems, options)
+  }
+
+  // Prevent tooltips from staying on page on HTML render by closing them
+  const closeTooltip = (elem) => {
+    const instance = window.M.Tooltip.getInstance(elem)
+    instance.close()
   }
 
   // Initialize modals

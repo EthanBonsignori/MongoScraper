@@ -10,10 +10,6 @@ module.exports = (app) => {
     res.render('index')
   })
 
-  // app.get('/article/:id', async (req, res) => {
-
-  // })
-
   app.post('/articles', async (req, res) => {
     const articleCount = await getWorldArticles()
     res.json(articleCount).status(201)
@@ -24,12 +20,27 @@ module.exports = (app) => {
     res.json(dbArticle).status(201)
   })
 
+  app.get('/articles/save/:id', async (req, res) => {
+    const id = req.params.id
+    await db.Article.findByIdAndUpdate(id, { saved: true })
+    const articles = await getArticlesFromDb()
+    res.json(articles).status(201)
+  })
+
+  app.get('/articles/unsave/:id', async (req, res) => {
+    const id = req.params.id
+    await db.Article.findByIdAndUpdate(id, { saved: false })
+    const articles = await getArticlesFromDb()
+    res.json(articles).status(201)
+  })
+
+  const getArticlesFromDb = () => {
+    return db.Article.find({})
+  }
+
   const getWorldArticles = async () => {
     const axiosRes = await axios.get('https://www.nytimes.com/section/world')
     const $ = cheerio.load(axiosRes.data)
-    console.log('=================================================')
-    console.log(axiosRes.data.length)
-    console.log('=================================================')
     let articleCount = 0
     $('section #stream-panel div ol li div').each(function () {
       // Only create an obj if cheerio finds some text
