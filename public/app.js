@@ -202,7 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Get comments from DB for one article
   const getComments = async (id) => {
-    console.log(id)
     const fetchRes = await window.fetch(`/articles/${id}`, { method: 'GET' })
     const body = await fetchRes.json()
     displayLoader(true, true)
@@ -216,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const deleteComment = async (commentId, articleId) => {
     const fetchRes = await window.fetch(`/articles/${articleId}/comments/${commentId}`, { method: 'DELETE' })
     const body = await fetchRes.json()
-    console.log(body)
     if (body.error) {
       handleCommentError(body)
       return
