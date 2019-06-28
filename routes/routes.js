@@ -24,8 +24,12 @@ module.exports = (app) => {
 
   // GET one article from DB and populate comments
   app.get('/articles/:id', async (req, res) => {
-    const dbArticle = await db.Article.findOne({ _id: req.params.id }).populate('comments')
-    res.status(201).json(dbArticle)
+    try {
+      const dbArticle = await db.Article.findOne({ _id: req.params.id }).populate('comments')
+      res.status(201).json(dbArticle)
+    } catch (err) {
+      console.error(err)
+    }
   })
 
   // Change the saved status of article
@@ -47,6 +51,18 @@ module.exports = (app) => {
     } catch (err) {
       console.error(err)
       res.status(422).json({ error: err.name, errorMessage: 'Comment must be 1-70 characters in length' })
+    }
+  })
+
+  // DELETE comment from DB and article comment id's array
+  app.delete('/articles/:aId/comments/:cId', async (req, res) => {
+    try {
+      await db.Comment.findOneAndDelete({ _id: req.params.cId })
+      await db.Article.findByIdAndUpdate(req.params.aId, { $pull: { 'comments': { _id: req.params.cId } } })
+      res.status(200).json({ message: 'Comment removed' })
+    } catch (err) {
+      console.error(err)
+      res.status(400).json({ error: err.name, errorMessage: 'Error deleting comment from database' })
     }
   })
 }

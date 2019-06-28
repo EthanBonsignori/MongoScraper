@@ -202,6 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Get comments from DB for one article
   const getComments = async (id) => {
+    console.log(id)
     const fetchRes = await window.fetch(`/articles/${id}`, { method: 'GET' })
     const body = await fetchRes.json()
     displayLoader(true, true)
@@ -211,9 +212,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1111)
   }
 
+  // Delete a comment from DB
+  const deleteComment = async (commentId, articleId) => {
+    const fetchRes = await window.fetch(`/articles/${articleId}/comments/${commentId}`, { method: 'DELETE' })
+    const body = await fetchRes.json()
+    console.log(body)
+    if (body.error) {
+      handleCommentError(body)
+      return
+    }
+    getComments(articleId)
+  }
+
   // Append each comment to article comment modal
   const setupCommentModal = (body, id) => {
-    document.getElementById('article-id').innerHTML = body._id || id
+    const articleId = body._id || id
+    document.getElementById('article-id').innerHTML = articleId
     // If any comments exist, display them
     if (body.comments && body.comments.length > 0) {
       comments.innerHTML = ''
@@ -221,12 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const commentHTML = `
           <div class="col s12 comment">
             <p style="display:inline;">${comment.body}</p>
-            <a class="btn red delete-comment">
+            <a class="btn red delete-comment" 
+              data-article-id="${articleId}" 
+              data-comment-id="${comment._id}">
               <i class="fas fa-trash-alt"></i>
             </a>
           </div>`
         comments.innerHTML += commentHTML
       })
+      initDeleteButtons()
     // If no comments, display no comments notification
     } else {
       comments.innerHTML = ``
@@ -284,8 +301,8 @@ document.addEventListener('DOMContentLoaded', () => {
     commentError.innerHTML = ''
     const commentTextArea = document.getElementById('comment-textarea')
     const comment = commentTextArea.value
-    const id = document.getElementById('article-id').innerHTML
-    const fetchRes = await window.fetch(`/articles/${id}`, {
+    const articleId = document.getElementById('article-id').innerHTML
+    const fetchRes = await window.fetch(`/articles/${articleId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -295,25 +312,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const body = await fetchRes.json()
     // Display errors if any exist
     if (body.error) {
-      commentError.innerHTML = `
-        <span class="helper-text" data-error="wrong" data-success="right">
-          <i class="fas fa-exclamation-triangle"></i><br>
-          ${body.error}<br>
-          ${body.errorMessage}
-        </span>`
+      handleCommentError(body)
       return
     }
     // Convert comments into an array of objects
-    const comments = body.comments.map(dbComment => ({ body: dbComment.body }))
-    setupCommentModal({ comments }, id)
+
+    const comments = body.comments.map(dbComment => ({ body: dbComment.body, _id: dbComment._id }))
+    setupCommentModal({ comments }, articleId)
     commentTextArea.value = ''
   })
+
+  const handleCommentError = (body) => {
+    commentError.innerHTML = `
+    <span class="helper-text" data-error="wrong" data-success="right">
+      <i class="fas fa-exclamation-triangle"></i><br>
+      ${body.error}<br>
+      ${body.errorMessage}
+    </span>`
+  }
 
   // initialize article save buttons
   const initSaveButtons = () => {
     const elems = document.getElementsByClassName('favorite-icon')
     Array.from(elems).forEach(function (elem) {
-      elem.addEventListener('click', function (e) {
+      elem.addEventListener('click', function () {
         const articleId = this.getAttribute('data-id')
         closeTooltip(this)
         setSaveStateArticle(articleId, true)
@@ -325,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const initUnsaveButtons = () => {
     const elems = document.getElementsByClassName('unfavorite-icon')
     Array.from(elems).forEach(function (elem) {
-      elem.addEventListener('click', function (e) {
+      elem.addEventListener('click', function () {
         const articleId = this.getAttribute('data-id')
         closeTooltip(this)
         setSaveStateArticle(articleId, false)
@@ -337,10 +359,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const initCommentButtons = () => {
     const elems = document.getElementsByClassName('comment-icon')
     Array.from(elems).forEach(function (elem) {
-      elem.addEventListener('click', function (e) {
+      elem.addEventListener('click', function () {
         const articleId = this.getAttribute('data-id')
         closeTooltip(this)
         getComments(articleId)
+      })
+    })
+  }
+
+  // initialize comment delete button(s)
+  const initDeleteButtons = () => {
+    const elems = document.getElementsByClassName('delete-comment')
+    Array.from(elems).forEach(function (elem) {
+      elem.addEventListener('click', function () {
+        const commentId = this.getAttribute('data-comment-id')
+        const articleId = this.getAttribute('data-article-id')
+        deleteComment(commentId, articleId)
       })
     })
   }
