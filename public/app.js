@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const articleDisplay = document.getElementById('article-display')
   const comments = document.getElementById('comments')
+  const commentError = document.getElementById('comment-error')
   // Controls whether or not to display all articles or just saved ones
   let onSavedPage = false
 
@@ -27,23 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="indeterminate red"></div>
         </div>`
     }
-  }
-
-  // Called if no articles are found in the DB and allows user to scrape new articles to DB.
-  const displayNoArticles = () => {
-    articleDisplay.innerHTML = `
-      <div class="no-articles">
-        <span>No articles found...</span>
-      </div>
-      <div class="center-align" style="margin: 1rem;">
-        <a class="waves-efect waves-light btn red" id="scrape">Get Articles</a>
-      </div>`
-    // Click listener for scrape button
-    document.getElementById('scrape').addEventListener('click', async (e) => {
-      displayLoader(true, false)
-      await postArticles()
-      getArticlesFromDb()
-    })
   }
 
   // Scrape articles and POST them to DB
@@ -120,12 +104,34 @@ document.addEventListener('DOMContentLoaded', () => {
     initCommentButtons()
   }
 
+  // Called if no articles are found in the DB.
+  const displayNoArticles = () => {
+    articleDisplay.innerHTML = `
+        <div class="no-articles">
+          <span>No articles found...</span>
+        </div>
+        <div class="center-align" style="margin: 1rem;">
+          <a class="waves-efect waves-light btn red" id="scrape">Get Articles</a>
+        </div>`
+    // Allows user to scrape new articles to DB.
+    document.getElementById('scrape').addEventListener('click', async (e) => {
+      displayLoader(true, false)
+      await postArticles()
+      getArticlesFromDb()
+    })
+  }
+
   // Helper to fix strings
   const fixStrings = (article) => {
-    // Limits length so it fits in 3 lines on the card
-    const maxLength = 250
-    if (article.body.length > maxLength) {
-      article.body = article.body.slice(0, maxLength - 3) + '...'
+    // Limits body length so it fits in 2 lines on the card
+    const maxBodyLength = 195
+    if (article.body.length > maxBodyLength) {
+      article.body = article.body.slice(0, maxBodyLength - 3) + '...'
+    }
+    // Limits title length so it fits in one line
+    const maxTitleLength = 90
+    if (article.title.length > maxTitleLength) {
+      article.title = article.title.slice(0, maxBodyLength - 3) + '...'
     }
     // Removes extra 'and' if it exists
     if (article.author.endsWith(' and ')) {
@@ -181,39 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return cardHTML
   }
 
-  const initSaveButtons = () => {
-    const elems = document.getElementsByClassName('favorite-icon')
-    Array.from(elems).forEach(function (elem) {
-      elem.addEventListener('click', function (e) {
-        const articleId = this.getAttribute('data-id')
-        closeTooltip(this)
-        setSaveStateArticle(articleId, true)
-      })
-    })
-  }
-
-  const initUnsaveButtons = () => {
-    const elems = document.getElementsByClassName('unfavorite-icon')
-    Array.from(elems).forEach(function (elem) {
-      elem.addEventListener('click', function (e) {
-        const articleId = this.getAttribute('data-id')
-        closeTooltip(this)
-        setSaveStateArticle(articleId, false)
-      })
-    })
-  }
-
-  const initCommentButtons = () => {
-    const elems = document.getElementsByClassName('comment-icon')
-    Array.from(elems).forEach(function (elem) {
-      elem.addEventListener('click', function (e) {
-        const articleId = this.getAttribute('data-id')
-        closeTooltip(this)
-        getComments(articleId)
-      })
-    })
-  }
-
   // Set the saved status an article
   const setSaveStateArticle = async (id, saved) => {
     const fetchRes = await window.fetch(`/articles/${id}`, {
@@ -231,16 +204,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const getComments = async (id) => {
     const fetchRes = await window.fetch(`/articles/${id}`, { method: 'GET' })
     const body = await fetchRes.json()
-    await displayLoader(true, true)
-    await setupCommentModal(body)
+    displayLoader(true, true)
     openCommentModal()
+    setTimeout(() => {
+      setupCommentModal(body)
+    }, 1111)
   }
 
   // Append each comment to article comment modal
-  const setupCommentModal = (body) => {
-    document.getElementById('article-id').innerHTML = body._id
+  const setupCommentModal = (body, id) => {
+    document.getElementById('article-id').innerHTML = body._id || id
     // If any comments exist, display them
-    if (body.comments.length > 0) {
+    if (body.comments && body.comments.length > 0) {
       comments.innerHTML = ''
       body.comments.map(comment => {
         const commentHTML = `
@@ -256,23 +231,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
       comments.innerHTML = ``
       const commentHTML = `
-        <div style="background-color:rgb(255, 187, 0); padding: 4px; border-radius: 3px;">
+        <div style="background-color: #673ab7; padding: 4px; border-radius: 3px;">
           <span style="color: #fff;">
-            <i class="fas fa-exclamation-triangle"></i>
-            No comments found for this article. Try adding one below.
+            <i class="fas fa-surprise" style="font-size:2rem;"></i>
+            No comments found for this article!<br />
+            Add one below!
           </span>
         </div>`
       comments.innerHTML += commentHTML
     }
-  }
-
-  // Initialize tooltips on article render
-  const initTooltips = () => {
-    const options = {
-      position: 'top'
-    }
-    const elems = document.querySelectorAll('.tooltipped')
-    window.M.Tooltip.init(elems, options)
   }
 
   // Open modal with article comments
@@ -296,29 +263,27 @@ document.addEventListener('DOMContentLoaded', () => {
     instance.close()
   }
 
-  // Initialize modals
-  const initModals = () => {
-    const options = {
-      endingTop: '50%'
-    }
-    const elems = document.querySelectorAll('.modal')
-    window.M.Modal.init(elems, options)
-  }
-  initModals()
-
+  // Set onSavedPage to true when on the saved articles page so it only returns saved articles on db query
   document.getElementById('saved-articles').addEventListener('click', () => {
-    // Show saved articles only
     onSavedPage = true
     getSavedArticles()
   })
 
+  // Set onSavedPage back to false so all articles are displayed
   document.getElementById('home-button').addEventListener('click', () => {
     onSavedPage = false
   })
 
+  // Clear comment erros when modal is close
+  document.getElementById('close-comment-modal').addEventListener('click', () => {
+    commentError.innerHTML = ''
+  })
+
   // Save a comment to an article
   document.getElementById('save-comment').addEventListener('click', async () => {
-    const comment = document.getElementById('comment-textarea').value
+    commentError.innerHTML = ''
+    const commentTextArea = document.getElementById('comment-textarea')
+    const comment = commentTextArea.value
     const id = document.getElementById('article-id').innerHTML
     const fetchRes = await window.fetch(`/articles/${id}`, {
       method: 'POST',
@@ -328,18 +293,75 @@ document.addEventListener('DOMContentLoaded', () => {
       body: JSON.stringify({ comment })
     })
     const body = await fetchRes.json()
-    console.log(body)
-    // document.getElementById('comments').innerHTML += `
-    //   <div class="col s12 comment">
-    //     <p style="display:inline;">${comment.value}</p>
-    //     <a class="btn red delete-comment" style="float:right;">
-    //       <i class="fas fa-trash-alt"></i>
-    //     </a>
-    //   </div>
-    // `
-    // document.getElementsByClassName('delete-comment').addEventListener('click', function () {
-
-    // })
-    comment.value = ''
+    // Display errors if any exist
+    if (body.error) {
+      commentError.innerHTML = `
+        <span class="helper-text" data-error="wrong" data-success="right">
+          <i class="fas fa-exclamation-triangle"></i><br>
+          ${body.error}<br>
+          ${body.errorMessage}
+        </span>`
+      return
+    }
+    // Convert comments into an array of objects
+    const comments = body.comments.map(dbComment => ({ body: dbComment.body }))
+    setupCommentModal({ comments }, id)
+    commentTextArea.value = ''
   })
+
+  // initialize article save buttons
+  const initSaveButtons = () => {
+    const elems = document.getElementsByClassName('favorite-icon')
+    Array.from(elems).forEach(function (elem) {
+      elem.addEventListener('click', function (e) {
+        const articleId = this.getAttribute('data-id')
+        closeTooltip(this)
+        setSaveStateArticle(articleId, true)
+      })
+    })
+  }
+
+  // initialize article unsave buttons
+  const initUnsaveButtons = () => {
+    const elems = document.getElementsByClassName('unfavorite-icon')
+    Array.from(elems).forEach(function (elem) {
+      elem.addEventListener('click', function (e) {
+        const articleId = this.getAttribute('data-id')
+        closeTooltip(this)
+        setSaveStateArticle(articleId, false)
+      })
+    })
+  }
+
+  // initialize article comment buttons
+  const initCommentButtons = () => {
+    const elems = document.getElementsByClassName('comment-icon')
+    Array.from(elems).forEach(function (elem) {
+      elem.addEventListener('click', function (e) {
+        const articleId = this.getAttribute('data-id')
+        closeTooltip(this)
+        getComments(articleId)
+      })
+    })
+  }
+
+  // Initialize tooltips on article render
+  const initTooltips = () => {
+    const options = {
+      position: 'top'
+    }
+    const elems = document.querySelectorAll('.tooltipped')
+    window.M.Tooltip.init(elems, options)
+  }
+
+  // Initialize modals
+  const initModals = () => {
+    const options = {
+      endingTop: '50%',
+      dismissible: false
+    }
+    const elems = document.querySelectorAll('.modal')
+    window.M.Modal.init(elems, options)
+  }
+  initModals()
 })

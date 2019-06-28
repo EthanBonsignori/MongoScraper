@@ -131,15 +131,29 @@ div.card-action {
 .comment {
   padding: 16px;
   position: relative;
-  background-color: rgba(0, 0, 0, 0.171);
+  background-color: #ef9a9a;
+  color: #000;
   border-radius: 4px;
   margin: 4px;
+}
+
+i.fa-surprise {
+  position: absolute;
+  left: 50px;
+  top: 72px;
 }
 
 .delete-comment {
   position: absolute;
   right: 10px;
   top: 9px;
+}
+
+.helper-text {
+  color: #fff !important;
+  background-color: rgb(255, 187, 0);
+  border-radius: 4px;
+  padding: 4px;
 }
 
 /* Custom Scrollbar */
