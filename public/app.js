@@ -1,5 +1,6 @@
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
+  const articleTitle = document.getElementById('article-title')
   const articleDisplay = document.getElementById('article-display')
   const comments = document.getElementById('comments')
   const commentError = document.getElementById('comment-error')
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <a href="/" id="home-button-saved" class="waves-efect waves-light btn red">Home</a>
         </div>`
       document.getElementById('home-button-saved').addEventListener('click', () => {
+        articleTitle.innerHTML = 'Articles'
         onSavedPage = false
       })
     }
@@ -281,11 +283,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // Set onSavedPage to true when on the saved articles page so it only returns saved articles on db query
   document.getElementById('saved-articles').addEventListener('click', () => {
     onSavedPage = true
+    articleTitle.innerHTML = 'Saved Articles'
     getSavedArticles()
   })
 
   // Set onSavedPage back to false so all articles are displayed
   document.getElementById('home-button').addEventListener('click', () => {
+    articleTitle.innerHTML = 'Articles'
     onSavedPage = false
   })
 
