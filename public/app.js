@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
       elem.addEventListener('click', function (e) {
         const articleId = this.getAttribute('data-id')
         closeTooltip(this)
-        setSaveArticle(articleId, true)
+        setSaveStateArticle(articleId, true)
       })
     })
   }
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
       elem.addEventListener('click', function (e) {
         const articleId = this.getAttribute('data-id')
         closeTooltip(this)
-        setSaveArticle(articleId, false)
+        setSaveStateArticle(articleId, false)
       })
     })
   }
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Set the saved status an article
-  const setSaveArticle = async (id, saved) => {
+  const setSaveStateArticle = async (id, saved) => {
     const fetchRes = await window.fetch(`/articles/${id}`, {
       method: 'PUT',
       headers: {
@@ -231,22 +231,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const getComments = async (id) => {
     const fetchRes = await window.fetch(`/articles/${id}`, { method: 'GET' })
     const body = await fetchRes.json()
-    displayLoader(true, true)
+    await displayLoader(true, true)
     await setupCommentModal(body)
-    openCommentModal(body)
+    openCommentModal()
   }
 
   // Append each comment to article comment modal
   const setupCommentModal = (body) => {
     document.getElementById('article-id').innerHTML = body._id
     // If any comments exist, display them
-    if (body.length > 0) {
-      body.map(comment => {
-        comments.innerHTML = ''
+    if (body.comments.length > 0) {
+      comments.innerHTML = ''
+      body.comments.map(comment => {
         const commentHTML = `
           <div class="col s12 comment">
             <p style="display:inline;">${comment.body}</p>
-            <a class="btn red delete-comment" style="float:right;">
+            <a class="btn red delete-comment">
               <i class="fas fa-trash-alt"></i>
             </a>
           </div>`
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Open modal with article comments
-  const openCommentModal = (comments) => {
+  const openCommentModal = () => {
     const elem = document.getElementById('comment-modal')
     const instance = window.M.Modal.getInstance(elem)
     instance.open()

@@ -130,6 +130,16 @@ div.card-action {
 
 .comment {
   padding: 16px;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0.171);
+  border-radius: 4px;
+  margin: 4px;
+}
+
+.delete-comment {
+  position: absolute;
+  right: 10px;
+  top: 9px;
 }
 
 /* Custom Scrollbar */

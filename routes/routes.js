@@ -22,15 +22,14 @@ module.exports = (app) => {
     res.status(200).json(dbArticle)
   })
 
-  // GET article from DB and populate comments
+  // GET one article from DB and populate comments
   app.get('/articles/:id', async (req, res) => {
-    const id = req.params.id
-    const dbArticle = await db.Article.findOne({ _id: id }).populate('comment')
+    const dbArticle = await db.Article.findOne({ _id: req.params.id }).populate('comments')
     res.json(dbArticle).status(201)
   })
 
   // Change the saved status of article
-  app.put('articles/:id', async (req, res) => {
+  app.put('/articles/:id', async (req, res) => {
     if (!req.params.id) req.status(400).json({ errorMessage: 'missing id' })
     if (!req.body.saved && typeof req.body.saved !== 'boolean') req.status(400).json({ errorMessage: 'missing saved status' })
     await db.Article.findByIdAndUpdate(req.params.id, { saved: req.body.saved })
@@ -40,14 +39,9 @@ module.exports = (app) => {
 
   // POST comment to article comments array
   app.post('/articles/:id', async (req, res) => {
-    console.log(req.body.comment)
-    const comment = req.body.comment
-    const dbComment = await db.Comment.create({ body: comment })
-    const id = req.params.id
-    const dbArticle = await db.Article.update(
-      { _id: id },
-      { $push: { comments: dbComment._id } },
-      { new: true })
-    res.json(dbArticle).status(201)
+    const dbComment = await db.Comment.create({ body: req.body.comment })
+    await db.Article.updateOne({ _id: req.params.id }, { $push: { comments: dbComment._id } })
+    const dbArticle = await db.Article.findById(req.params.id)
+    res.json(dbArticle).status(200)
   })
 }

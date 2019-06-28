@@ -24,7 +24,6 @@ const scrape = async () => {
       Article.create(articleObj).catch(err => {
         console.error(err)
       })
-      console.log(articleCount)
       articleCount++
     }
   })
