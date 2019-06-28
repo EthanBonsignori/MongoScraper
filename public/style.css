@@ -156,6 +156,30 @@ i.fa-surprise {
   padding: 4px;
 }
 
+.footer-link:hover {
+  color: lightgray !important;
+}
+
+#scrape-new {
+  cursor: pointer;
+}
+#scrape-new:hover {
+  color: rgb(83, 83, 83) !important;
+}
+
+#nuke {
+  cursor: pointer;
+}
+#nuke:hover {
+  color: red !important;
+}
+
+#confirm-nuke {
+  float: left;
+  margin-left: 10px;
+  margin-bottom: 5px;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);

@@ -294,6 +294,25 @@ document.addEventListener('DOMContentLoaded', () => {
     commentError.innerHTML = ''
   })
 
+  // Scrape new articles from DB
+  document.getElementById('scrape-new').addEventListener('click', async (e) => {
+    displayLoader(true, false)
+    await postArticles()
+    getArticlesFromDb()
+  })
+
+  // display confirmation modal
+  document.getElementById('nuke').addEventListener('click', () => {
+    const elem = document.getElementById('confirm-nuke-modal')
+    const instance = window.M.Modal.getInstance(elem)
+    instance.open()
+  })
+
+  // NUKE DB
+  document.getElementById('confirm-nuke').addEventListener('click', async () => {
+    // const nukeRes = await window.fetch('/articles/')
+  })
+
   // Save a comment to an article
   document.getElementById('save-comment').addEventListener('click', async () => {
     commentError.innerHTML = ''
