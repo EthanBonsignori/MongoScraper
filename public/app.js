@@ -443,6 +443,13 @@ document.addEventListener('DOMContentLoaded', () => {
     window.M.Tooltip.init(elems, options)
   }
 
+  // initialize parralax
+  const initParallax = () => {
+    const elems = document.querySelectorAll('.parallax')
+    window.M.Parallax.init(elems, null)
+  }
+  initParallax()
+
   // Initialize modals
   const initModals = () => {
     const options = {
