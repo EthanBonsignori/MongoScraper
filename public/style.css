@@ -149,7 +149,7 @@ i.fa-surprise {
   top: 9px;
 }
 
-.helper-text {
+.helper-text .error-text {
   color: #fff !important;
   background-color: rgb(255, 187, 0);
   border-radius: 4px;
@@ -158,13 +158,14 @@ i.fa-surprise {
 
 .footer-link:hover {
   color: lightgray !important;
+  cursor: pointer;
 }
 
 #scrape-new {
   cursor: pointer;
 }
 #scrape-new:hover {
-  color: rgb(83, 83, 83) !important;
+  color: green !important;
 }
 
 #nuke {
@@ -172,12 +173,6 @@ i.fa-surprise {
 }
 #nuke:hover {
   color: red !important;
-}
-
-#confirm-nuke {
-  float: left;
-  margin-left: 10px;
-  margin-bottom: 5px;
 }
 
 /* Custom Scrollbar */

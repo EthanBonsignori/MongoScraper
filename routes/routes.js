@@ -54,6 +54,16 @@ module.exports = (app) => {
     }
   })
 
+  app.delete('/articles', async (req, res) => {
+    try {
+      await db.Article.deleteMany({ saved: false })
+      res.status(200).json({ message: 'Succesfully removed all unsaved articles' })
+    } catch (err) {
+      console.error(err)
+      res.status(400).json({ error: err.name, errorMessage: 'Unable to remove articles' })
+    }
+  })
+
   // DELETE comment from DB and article comment id's array
   app.delete('/articles/:aId/comments/:cId', async (req, res) => {
     try {

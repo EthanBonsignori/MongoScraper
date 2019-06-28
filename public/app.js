@@ -308,9 +308,37 @@ document.addEventListener('DOMContentLoaded', () => {
     instance.open()
   })
 
-  // NUKE DB
+  // remove any unsaved articles from DB
   document.getElementById('confirm-nuke').addEventListener('click', async () => {
-    // const nukeRes = await window.fetch('/articles/')
+    const confirmText = document.getElementById('confirm-nuke-text')
+    const footer = document.getElementById('confirm-footer')
+    const nukeRes = await window.fetch('/articles/', { method: 'DELETE' })
+    const nukeBody = await nukeRes.json()
+    // handle errors
+    if (nukeBody.error) {
+      confirmText.innerHTML = `
+        <span class="error-text">
+          <h4>
+            <i class="fas fa-exclamation-triangle"></i>
+          </h4><br>
+          <h5>${nukeBody.error}</h5><br>
+          <h5>${nukeBody.errorMessage}</h5>
+        </span>`
+      return
+    }
+    confirmText.innerHTML = `
+    <h4>${nukeBody.message}</h4>`
+    footer.innerHTML = ''
+    // Re-render articles
+    await getArticlesFromDb()
+    setTimeout(() => {
+    // Close the modal
+      const elem = document.getElementById('confirm-nuke-modal')
+      const instance = window.M.Modal.getInstance(elem)
+      instance.close()
+      // Reset modal html
+      renderNukeModal()
+    }, 2000)
   })
 
   // Save a comment to an article
@@ -333,12 +361,12 @@ document.addEventListener('DOMContentLoaded', () => {
       return
     }
     // Convert comments into an array of objects
-
     const comments = body.comments.map(dbComment => ({ body: dbComment.body, _id: dbComment._id }))
     setupCommentModal({ comments }, articleId)
     commentTextArea.value = ''
   })
 
+  // display errors when saving/deleting comments
   const handleCommentError = (body) => {
     commentError.innerHTML = `
     <span class="helper-text" data-error="wrong" data-success="right">
@@ -346,6 +374,16 @@ document.addEventListener('DOMContentLoaded', () => {
       ${body.error}<br>
       ${body.errorMessage}
     </span>`
+  }
+
+  // reset the nuke modal to its default state
+  const renderNukeModal = () => {
+    document.getElementById('confirm-nuke-text').innerHTML = `
+      <h4>Are you sure you want to clear the database?</h4>
+      <h5 class="grey-text">Saved articles and their comments will not be erased.</h5>`
+    document.getElementById('confirm-footer').innerHTML = `
+      <a href="#!" id='confirm-nuke' class="waves-effect waves-red btn-flat red-text">Yes</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat green white-text">Cancel</a>`
   }
 
   // initialize article save buttons

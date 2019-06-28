@@ -61,8 +61,8 @@
           <ul>
             <li><a class="grey-text text-lighten-3 footer-link" href="https://github.com/EthanBonsignori/mongoscraper" target="_blank">Github Repo</a></li>
             <li><a class="grey-text text-lighten-3 footer-link" href="https://ethanbon.com" target="_blank">Ethan's Portfolio</a></li>
-            <li><hr></li>
-            <li><a class="grey-text text-lighten-1" id="scrape-new">Scrape New Articles</a></li>
+            <li><br></li>
+            <li><a class="grey-text text-lighten-3 footer-link" id="scrape-new">Scrape New Articles</a></li>
             <li><a class="grey-text text-lighten-1" id="nuke">Clear database</a></li>
           </ul>
         </div>
@@ -129,13 +129,14 @@
   <!-- Confirmation of DB nuke Modal -->
   <div id="confirm-nuke-modal" class="modal">
     <div class="modal-content">
-      <div class="center-align">
+      <div id="confirm-nuke-text" class="center-align">
         <h4>Are you sure you want to clear the database?</h4>
+        <h5 class="grey-text">Saved articles and their comments will not be erased.</h5>
       </div>
     </div>
-    <div class="modal-footer">
-      <a href="#!" id='confirm-nuke' class="waves-effect waves-red red white-text btn">YES!</a>
-      <a href="#!" class="modal-close waves-effect waves-green btn-flat green-text">No, take me away from here!</a>
+    <div id="confirm-footer" class="modal-footer">
+      <a href="#!" id='confirm-nuke' class="waves-effect waves-red btn-flat red-text">Yes</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat green white-text">Cancel</a>
     </div>
   </div>
 
