@@ -2,7 +2,7 @@
 
 # Mongo Scraper
 
-> Mongo Scraper is an app that scrapes articles from The New York Timess to a Mongo database and displays them on the page. It also allows the user to save and comment on articles.
+> Mongo Scraper is an app that scrapes articles from The New York Times to a Mongo database and displays them on the page. It also allows the user to save and comment on articles.
 
 ## Features
 - Scrape articles from www.nytimes.com/section/world and get info such as title, caption, author, thumbnail, and link for each article
@@ -10,7 +10,7 @@
 - Post comments on saved articles
 - Delete comments
 - Unsave articles
-- View saved articles only
+- Filter by saved articles
 - Clear the database of any unsaved articles
 
 ![Demo](./public/images/readme/demo.gif "Demo of scraping and saving/commenting on an article")
