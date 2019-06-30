@@ -20,7 +20,7 @@
 - Clearing of unsaved articles sometimes requires a reload for the button to work.
 
 ## More info
-I created this as a project to learn to use Mongoose in a Node app. It was an assignment for a 6-month coding bootcamp through GA tech and Trilogy. I challenged myself for this project to only use vanilla javascript for the frontend and did not use jQuery, which is what I'd used for most projects up until this point. This app was created in June of 2019.
+I created this as a project to learn to use Mongoose in a Node app. It was an assignment for a 6-month coding bootcamp through Georgia Tech and Trilogy. I challenged myself for this project to only use vanilla javascript for the frontend and did not use jQuery, which is what I'd used for most projects up until this point. This app was created in June of 2019.
 
 **Technologies Used**
 - Node.js
