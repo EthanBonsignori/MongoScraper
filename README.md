@@ -14,10 +14,10 @@
 ![Demo](./public/images/readme/demo.gif "Demo of scraping and saving/commenting on an article")
 
 ## Features
-- Scrape articles from www.nytimes.com/section/world and get info such as title, caption, author, thumbnail, and a link to the article
+- Scrape articles from www.nytimes.com/section/world and get info such as title, caption, author, thumbnail, and link for each article
 - Save articles you want to track
 - Post comments on saved articles
-- Delete saved comments
+- Delete comments
 - Unsave articles
 - View saved articles only
 - Clear the database of any unsaved articles
